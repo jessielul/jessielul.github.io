@@ -209,11 +209,11 @@ strong { font-weight: 600; }
 .hero h1 .name-accent { color: var(--accent); }
 .hero-lede { font-size: 19px; color: var(--ink-soft); max-width: 560px; }
 .hero-meta {
-  display: flex; flex-wrap: wrap; gap: 8px 18px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px;
   margin-top: 26px; font-size: 14.5px; color: var(--ink-faint);
 }
 .hero-meta span { display: inline-flex; align-items: center; gap: 7px; }
-.dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent-soft); }
+.dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent-soft); flex-shrink: 0; }
 
 .hero-portrait { justify-self: end; width: 100%; max-width: 350px; }
 .hero-portrait .frame {
@@ -707,6 +707,7 @@ strong { font-weight: 600; }
   .hero { padding: 52px 0 56px; }
   .page-head { padding: 46px 0 34px; }
   .metrics { gap: 16px; }
+  .hero-meta .dot { display: none; }
   .door { padding: 30px 24px 32px; }
 }
 
