@@ -175,4 +175,18 @@
     lb.addEventListener('close', function () { lbImg.src = ''; });
   }
 
+  /* ---------- 6. scale the embedded prototype to fit narrow screens ---------- */
+  var ps = document.getElementById('proto-scaler');
+  if (ps) {
+    var stage = ps.querySelector('.proto-stage');
+    var fitProto = function () {
+      var s = Math.min(1, ps.parentNode.clientWidth / 410);
+      stage.style.transform = 'scale(' + s + ')';
+      ps.style.width = (410 * s) + 'px';
+      ps.style.height = (864 * s) + 'px';
+    };
+    fitProto();
+    window.addEventListener('resize', fitProto);
+  }
+
 })();

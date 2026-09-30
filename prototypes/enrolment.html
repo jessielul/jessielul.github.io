@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Enrolment carousel: concept by Jessie</title>
+<style>
+  :root {
+    --ink: #1f2a1a; --soft: #5b6457; --line: #e6e8e2; --bg: #ffffff;
+    --accent: #3e5234; --dot: #c7ccc3;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  body { display: flex; justify-content: center; }
+  .app { width: 390px; height: 844px; display: flex; flex-direction: column; overflow: hidden; background: var(--bg); }
+
+  /* status + app bar */
+  .status { height: 50px; display: flex; align-items: flex-end; justify-content: space-between; padding: 0 34px 8px; font-size: 15px; font-weight: 600; }
+  .status .icons { display: flex; gap: 6px; align-items: center; }
+  .appbar { height: 48px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; border-bottom: 1px solid var(--line); }
+  .appbar .title { font-size: 17px; font-weight: 700; letter-spacing: -.01em; }
+  .appbar svg { display: block; }
+
+  /* post header */
+  .post-head { display: flex; align-items: center; gap: 10px; padding: 12px 14px; }
+  .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--accent); display: grid; place-items: center; flex-shrink: 0;
+    box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px #c9a227; }
+  .who { line-height: 1.2; }
+  .who b { font-size: 14px; display: block; }
+  .who span { font-size: 12px; color: var(--soft); }
+  .chip { margin-left: auto; font-size: 11.5px; font-weight: 700; background: #f5eab8; color: #3b3413; padding: 4px 10px; border-radius: 999px; }
+
+  /* carousel */
+  .carousel { position: relative; flex-shrink: 0; width: 390px; height: 487.5px; background: #f3f1ea; }
+  .track { display: flex; width: 100%; height: 100%; overflow-x: auto; scroll-snap-type: x mandatory;
+    scroll-behavior: smooth; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .track::-webkit-scrollbar { display: none; }
+  .slide { flex: 0 0 100%; height: 100%; scroll-snap-align: center; scroll-snap-stop: always; }
+  .slide img { width: 100%; height: 100%; object-fit: cover; display: block; user-select: none; -webkit-user-drag: none; }
+  .count { position: absolute; top: 12px; right: 12px; background: rgba(20,24,18,.72); color: #fff;
+    font-size: 12px; font-weight: 600; padding: 4px 9px; border-radius: 999px; pointer-events: none; }
+  .nav { position: absolute; top: 50%; transform: translateY(-50%); width: 32px; height: 32px; border-radius: 50%;
+    border: 0; background: rgba(255,255,255,.92); box-shadow: 0 2px 8px rgba(0,0,0,.18); cursor: pointer;
+    display: grid; place-items: center; transition: opacity .2s; color: var(--ink); }
+  .nav[hidden] { display: none; }
+  .nav.prev { left: 10px; } .nav.next { right: 10px; }
+  .nav:focus-visible, .dots button:focus-visible { outline: 3px solid #c9a227; outline-offset: 2px; }
+
+  /* actions + dots */
+  .actions { position: relative; display: flex; align-items: center; gap: 16px; padding: 12px 14px 6px; }
+  .actions .save { margin-left: auto; }
+  .actions button { all: unset; cursor: pointer; display: grid; place-items: center; }
+  .dots { position: absolute; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; }
+  .dots button { width: 6px; height: 6px; padding: 0; border: 0; border-radius: 50%; background: var(--dot); cursor: pointer; transition: transform .2s, background .2s; }
+  .dots button.on { background: var(--accent); transform: scale(1.25); }
+  .liked path { fill: #d94c4c; stroke: #d94c4c; }
+  .saved path { fill: var(--ink); }
+
+  .caption { padding: 4px 14px 0; font-size: 14px; line-height: 1.45; }
+  .caption b { font-weight: 700; }
+  .caption .tags { color: #3a5a8c; }
+  .meta { padding: 8px 14px; font-size: 12px; color: var(--soft); }
+  .hint { margin-top: auto; padding: 12px 14px 22px; text-align: center; font-size: 12.5px; color: var(--soft); border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+<main class="app" aria-label="Carousel post concept">
+  <div class="status" aria-hidden="true">
+    <span>9:41</span>
+    <span class="icons">
+      <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1" fill="#1f2a1a"/><rect x="5" y="5" width="3" height="7" rx="1" fill="#1f2a1a"/><rect x="10" y="2" width="3" height="10" rx="1" fill="#1f2a1a"/><rect x="15" y="0" width="3" height="12" rx="1" fill="#1f2a1a"/></svg>
+      <svg width="25" height="12" viewBox="0 0 25 12"><rect x=".5" y=".5" width="21" height="11" rx="3" fill="none" stroke="#1f2a1a"/><rect x="2" y="2" width="16" height="8" rx="2" fill="#1f2a1a"/><rect x="23" y="4" width="2" height="4" rx="1" fill="#1f2a1a"/></svg>
+    </span>
+  </div>
+
+  <header class="appbar">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+    <span class="title">Post</span>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>
+  </header>
+
+  <div class="post-head">
+    <div class="avatar" aria-hidden="true">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f5eab8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg>
+    </div>
+    <div class="who"><b>new.student.guide</b><span>Canberra, ACT</span></div>
+    <span class="chip">Concept</span>
+  </div>
+
+  <section class="carousel" aria-roledescription="carousel" aria-label="Enrolling for the first time, 9 slides">
+    <div class="track" id="track" tabindex="0">
+      <div class="slide"><img src="../assets/enrolment-01.jpg" alt="Slide 1 of 9: Enrolling for the first time? Everything you need to go from offer to enrolled." draggable="false"></div>
+      <div class="slide"><img src="../assets/enrolment-02.jpg" alt="Slide 2 of 9: Before you start, have your USI ready." loading="lazy" draggable="false"></div>
+      <div class="slide"><img src="../assets/enrolment-03.jpg" alt="Slide 3 of 9: Step 1, choose your courses." loading="lazy" draggable="false"></div>
+      <div class="slide"><img src="../assets/enrolment-04.jpg" alt="Slide 4 of 9: Step 2, log in to ANUHub." loading="lazy" draggable="false"></div>
+      <div class="slide"><img src="../assets/enrolment-05.jpg" alt="Slide 5 of 9: Step 2, add your courses." loading="lazy" draggable="false"></div>
+      <div class="slide"><img src="../assets/enrolment-06.jpg" alt="Slide 6 of 9: Key dates, know your last day to enrol." loading="lazy" draggable="false"></div>
+      <div class="slide"><img src="../assets/enrolment-07.jpg" alt="Slide 7 of 9: You're enrolled, what's next." loading="lazy" draggable="false"></div>
+      <div class="slide"><img src="../assets/enrolment-08.jpg" alt="Slide 8 of 9: Stuck? Try these fixes." loading="lazy" draggable="false"></div>
+      <div class="slide"><img src="../assets/enrolment-09.jpg" alt="Slide 9 of 9: We're here to help, Student Hubs contact details." loading="lazy" draggable="false"></div>
+    </div>
+    <span class="count" id="count" aria-live="polite">1/9</span>
+    <button class="nav prev" id="prev" type="button" aria-label="Previous slide" hidden>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <button class="nav next" id="next" type="button" aria-label="Next slide">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+  </section>
+
+  <div class="actions">
+    <button type="button" id="like" aria-label="Like" aria-pressed="false">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.5 8 3.6 4.5 7 4.5c2 0 3.4 1.1 5 3 1.6-1.9 3-3 5-3 3.4 0 5.5 3.5 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg>
+    </button>
+    <button type="button" aria-label="Comment">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M20.5 11.5a8.5 8.5 0 0 1-12.4 7.6L3.5 20.5l1.4-4.4A8.5 8.5 0 1 1 20.5 11.5z"/></svg>
+    </button>
+    <button type="button" aria-label="Share">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M21.5 3L10 14.5M21.5 3l-7 18-4.5-6.5L3 10z"/></svg>
+    </button>
+    <div class="dots" id="dots" role="tablist" aria-label="Choose slide"></div>
+    <button type="button" class="save" id="save" aria-label="Save" aria-pressed="false">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V4.5A1.5 1.5 0 0 1 6.5 3h11A1.5 1.5 0 0 1 19 4.5z"/></svg>
+    </button>
+  </div>
+
+  <p class="caption"><b>new.student.guide</b> Enrolling for the first time? Swipe through for everything you need to go from offer to enrolled 🎓 Save it for enrolment day.
+    <span class="tags">#NewAtANU #Enrolment #Canberra</span></p>
+  <p class="meta">Concept post · not an official ANU account</p>
+
+  <p class="hint">Swipe, use the arrows, or tap the dots</p>
+</main>
+
+<script>
+(function () {
+  var track = document.getElementById('track');
+  var slides = track.querySelectorAll('.slide');
+  var n = slides.length, cur = 0;
+  var count = document.getElementById('count');
+  var prev = document.getElementById('prev'), next = document.getElementById('next');
+  var dotsBox = document.getElementById('dots'), dots = [];
+
+  for (var i = 0; i < n; i++) {
+    var d = document.createElement('button');
+    d.type = 'button'; d.setAttribute('role', 'tab');
+    d.setAttribute('aria-label', 'Slide ' + (i + 1));
+    (function (k) { d.addEventListener('click', function () { go(k); }); })(i);
+    dotsBox.appendChild(d); dots.push(d);
+  }
+
+  function go(k) {
+    k = Math.max(0, Math.min(n - 1, k));
+    track.scrollTo({ left: k * track.clientWidth, behavior: 'smooth' });
+  }
+  function update() {
+    var k = Math.round(track.scrollLeft / track.clientWidth);
+    if (k === cur && dots[k].classList.contains('on')) return;
+    cur = k;
+    count.textContent = (k + 1) + '/' + n;
+    dots.forEach(function (d, j) { d.classList.toggle('on', j === k); d.setAttribute('aria-selected', j === k); });
+    prev.hidden = k === 0; next.hidden = k === n - 1;
+  }
+  track.addEventListener('scroll', function () { window.requestAnimationFrame(update); }, { passive: true });
+  prev.addEventListener('click', function () { go(cur - 1); });
+  next.addEventListener('click', function () { go(cur + 1); });
+  track.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight') { e.preventDefault(); go(cur + 1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); go(cur - 1); }
+  });
+
+  /* drag to swipe with a mouse, like a phone */
+  var down = false, startX = 0, startLeft = 0, moved = false;
+  track.addEventListener('pointerdown', function (e) {
+    if (e.pointerType !== 'mouse') return;
+    down = true; moved = false; startX = e.clientX; startLeft = track.scrollLeft;
+    track.style.scrollSnapType = 'none'; track.style.scrollBehavior = 'auto';
+  });
+  window.addEventListener('pointermove', function (e) {
+    if (!down) return;
+    var dx = e.clientX - startX; if (Math.abs(dx) > 3) moved = true;
+    track.scrollLeft = startLeft - dx;
+  });
+  window.addEventListener('pointerup', function (e) {
+    if (!down) return; down = false;
+    var dx = e.clientX - startX, w = track.clientWidth;
+    var k = Math.round(startLeft / w);
+    if (dx < -w * 0.15) k++; else if (dx > w * 0.15) k--;
+    track.style.scrollSnapType = ''; track.style.scrollBehavior = '';
+    go(k);
+  });
+
+  function toggle(id, cls) {
+    var b = document.getElementById(id);
+    b.addEventListener('click', function () {
+      var on = b.classList.toggle(cls); b.setAttribute('aria-pressed', on);
+    });
+  }
+  toggle('like', 'liked'); toggle('save', 'saved');
+
+  update();
+})();
+</script>
+</body>
+</html>
