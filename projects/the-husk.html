@@ -17,7 +17,7 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/ebgaramond-400.woff" as="font" type="font/woff" crossorigin>
 <link rel="preload" href="/assets/fonts/carlito-400.woff" as="font" type="font/woff" crossorigin>
-<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/styles.css?v=8cf36d2b">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -26,11 +26,13 @@
   <div class="wrap header-inner">
     <a class="brand" href="/">Jessie Lu<small>Canberra, ACT</small></a>
     <button class="nav-toggle" aria-expanded="false" aria-controls="nav" aria-label="Open menu">Menu</button>
-    <nav class="nav" id="nav">
-      <a href="/">Home</a>
-      <a href="/project" class="active">Projects</a>
-      <a href="/experience">Experience</a>
-      <a href="/resume" class="nav-cta">Résumé</a>
+    <nav class="nav" id="nav" aria-label="Main">
+      <div class="jelly" id="jelly">
+        <a href="/" class="jelly-chip"><span class="jelly-face">Home</span></a>
+        <a href="/project" class="jelly-chip is-on" aria-current="page"><span class="jelly-face">Projects</span></a>
+        <a href="/experience" class="jelly-chip"><span class="jelly-face">Experience</span></a>
+      </div>
+      <a href="/resume" class="nav-cta">R&eacute;sum&eacute;</a>
     </nav>
   </div>
 </header>
@@ -157,6 +159,6 @@
   </div>
 </footer>
 
-<script src="/script.js"></script>
+<script src="/script.js?v=f8e110b1"></script>
 </body>
 </html>

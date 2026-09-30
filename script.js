@@ -22,7 +22,7 @@
 
     // close when a link is tapped
     nav.addEventListener('click', function (e) {
-      if (e.target.tagName === 'A') {
+      if (e.target.closest && e.target.closest('a')) {
         nav.classList.remove('open');
         toggle.setAttribute('aria-expanded', 'false');
         toggle.textContent = 'Menu';
@@ -187,6 +187,109 @@
     };
     fitProto();
     window.addEventListener('resize', fitProto);
+  }
+
+  /* ---------- 7. jelly navigation chips ----------
+     The chosen chip swells (wide first, then tall) and pushes its
+     neighbours aside, one after another. Written from scratch with a
+     tiny spring simulator; no libraries. Desktop only: on phones the
+     menu is a plain vertical list. */
+  var jelly = document.getElementById('jelly');
+  if (jelly) {
+    var chips = Array.prototype.slice.call(jelly.querySelectorAll('.jelly-chip'));
+    var SWELL = 0.18, SHRINK = 0.05, BARGE = 5, STAGGER = 0.012;
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var desktop = window.matchMedia('(min-width: 761px)');
+    var selected = -1;
+    chips.forEach(function (c, i) { if (c.classList.contains('is-on')) selected = i; });
+
+    // one spring per property: position, velocity, target, stiffness, damping, start delay
+    function spring(v) { return { p: v, v: 0, t: v, k: 500, c: 30, wait: 0 }; }
+    var st = chips.map(function () { return { x: spring(0), sx: spring(1), sy: spring(1) }; });
+    var widths = [], raf = 0, last = 0;
+
+    function paint() {
+      chips.forEach(function (el, i) {
+        var s = st[i];
+        el.style.transform = desktop.matches
+          ? 'translateX(' + s.x.p.toFixed(2) + 'px) scale(' + s.sx.p.toFixed(4) + ',' + s.sy.p.toFixed(4) + ')'
+          : '';
+      });
+    }
+
+    function measure() {
+      chips.forEach(function (el, i) { el.style.transform = ''; widths[i] = el.offsetWidth; });
+      var maxW = Math.max.apply(null, widths.concat([0]));
+      jelly.style.setProperty('--jelly-pad-x', Math.ceil(maxW * SWELL * 0.65 + BARGE) + 'px');
+    }
+
+    // bounce: 0 settles with no overshoot, higher values wobble more
+    function tune(sp, target, k, bounce, wait) {
+      sp.t = target; sp.k = k; sp.c = 2 * Math.sqrt(k) * (1 - bounce); sp.wait = wait;
+    }
+
+    function setTargets(sel, instant) {
+      var push = sel < 0 ? 0 : (widths[sel] || 0) * SWELL / 2 + BARGE;
+      chips.forEach(function (el, i) {
+        var s = st[i], dist = sel < 0 ? 0 : Math.abs(i - sel);
+        var x = sel < 0 ? 0 : Math.sign(i - sel) * push;
+        var scale = sel < 0 ? 1 : (i === sel ? 1 + SWELL : 1 - SHRINK);
+        var k = 1100 * (1 - 0.12 * Math.min(dist, 3));
+        var wait = dist * STAGGER;
+        tune(s.x, x, k, 0.25, wait);
+        tune(s.sx, scale, k * 1.25, 0.55, wait);          // width: quick and wobbly
+        tune(s.sy, scale, k * 0.85, 0.25, wait + 0.025);  // height: follows a beat later
+        if (instant) ['x', 'sx', 'sy'].forEach(function (key) { s[key].p = s[key].t; s[key].v = 0; s[key].wait = 0; });
+      });
+      if (instant) { paint(); return; }
+      if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick); }
+    }
+
+    function tick(now) {
+      var dt = Math.min((now - last) / 1000, 1 / 30); last = now;
+      var moving = false;
+      st.forEach(function (s) {
+        ['x', 'sx', 'sy'].forEach(function (key) {
+          var sp = s[key];
+          if (sp.wait > 0) { sp.wait -= dt; moving = true; return; }
+          // a few small sub-steps keep the stiff spring stable
+          for (var n = 0; n < 4; n++) {
+            var h = dt / 4, a = -sp.k * (sp.p - sp.t) - sp.c * sp.v;
+            sp.v += a * h; sp.p += sp.v * h;
+          }
+          if (Math.abs(sp.v) > 0.001 || Math.abs(sp.p - sp.t) > 0.0005) moving = true;
+          else { sp.p = sp.t; sp.v = 0; }
+        });
+      });
+      paint();
+      raf = moving ? requestAnimationFrame(tick) : 0;
+    }
+
+    function settle() { measure(); setTargets(selected, true); }
+    settle();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(settle);
+    window.addEventListener('resize', settle);
+
+    chips.forEach(function (el, i) {
+      el.addEventListener('pointerenter', function () {
+        if (el.dataset.prefetched || i === selected) return;
+        var l = document.createElement('link');
+        l.rel = 'prefetch'; l.href = el.getAttribute('href');
+        document.head.appendChild(l); el.dataset.prefetched = '1';
+      });
+      el.addEventListener('click', function (e) {
+        // leave new-tab clicks, the current page and phone layout alone
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+        if (i === selected || !desktop.matches || reduceMotion.matches) return;
+        e.preventDefault();
+        if (selected >= 0) chips[selected].classList.remove('is-on');
+        el.classList.add('is-on');
+        selected = i;
+        setTargets(i, false);
+        var href = el.getAttribute('href');
+        setTimeout(function () { window.location.href = href; }, 140);
+      });
+    });
   }
 
 })();
