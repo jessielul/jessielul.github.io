@@ -1,6 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Jessie Lu">
-  <rect width="64" height="64" rx="14" fill="#1b1e1b"/>
-  <text x="32" y="44" font-family="Georgia, 'Times New Roman', serif" font-size="31"
-        font-weight="600" fill="#fcfcfa" text-anchor="middle" letter-spacing="-1">JL</text>
-  <circle cx="49" cy="17" r="4.5" fill="#4f6f52"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Jessie Lu"><rect width="64" height="64" rx="14" fill="#1b1e1b"/><g fill="#fcfcfa"><path transform="translate(22.82 43.63) scale(0.0468 -0.0468)" d="M49 -200Q-78 -200 -78 -145Q-78 -126 -61.5 -108.5Q-45 -91 -31 -91Q-19 -91 -8.0 -96.5Q3 -102 13 -115Q30 -135 40.0 -146.5Q50 -158 62 -158Q94 -158 110.0 -118.0Q126 -78 126 4V551Q126 584 112.0 598.0Q98 612 60 620Q34 625 34 641Q34 647 41.0 650.5Q48 654 57 654Q82 654 104.5 653.0Q127 652 149.0 651.0Q171 650 192 650Q212 650 232.0 651.0Q252 652 274.0 653.0Q296 654 320 654Q330 654 336.0 650.5Q342 647 342 640Q342 632 335.5 627.5Q329 623 316 620Q277 610 266.0 596.5Q255 583 255 550V73Q255 41 243.5 6.5Q232 -28 213.5 -60.5Q195 -93 175 -119Q148 -154 116.0 -177.0Q84 -200 49 -200Z"/></g><circle cx="46" cy="44" r="5" fill="#8fa893"/></svg>
