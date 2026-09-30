@@ -35,6 +35,26 @@
       </div>
       <a href="/resume" class="nav-cta">R&eacute;sum&eacute;</a>
     </nav>
+    <script>
+      /* Draw the chosen chip swollen from the very first frame, so the menu
+         doesn't jump when the page opens. script.js takes over afterwards. */
+      (function () {
+        var j = document.getElementById('jelly');
+        if (!j || !window.matchMedia('(min-width: 761px)').matches) return;
+        var c = j.querySelectorAll('.jelly-chip'), w = [], sel = -1, max = 0, i;
+        for (i = 0; i < c.length; i++) {
+          w[i] = c[i].offsetWidth; if (w[i] > max) max = w[i];
+          if (c[i].classList.contains('is-on')) sel = i;
+        }
+        j.style.setProperty('--jelly-pad-x', Math.ceil(max * 0.18 * 0.65 + 5) + 'px');
+        if (sel < 0) return;
+        var push = w[sel] * 0.18 / 2 + 5;
+        for (i = 0; i < c.length; i++) {
+          var sc = i === sel ? 1.18 : 0.95, x = Math.sign(i - sel) * push;
+          c[i].style.transform = 'translateX(' + x.toFixed(2) + 'px) scale(' + sc.toFixed(4) + ',' + sc.toFixed(4) + ')';
+        }
+      })();
+    </script>
   </div>
 </header>
 
