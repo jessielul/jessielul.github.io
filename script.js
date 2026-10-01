@@ -138,7 +138,7 @@
 
   /* ---------- 5. gallery lightbox (project detail pages) ---------- */
   var lb = document.getElementById('lightbox');
-  var links = Array.prototype.slice.call(document.querySelectorAll('.g-link'));
+  var links = Array.prototype.slice.call(document.querySelectorAll('.g-link, .acc-panel'));
   if (lb && links.length && typeof lb.showModal === 'function') {
     var lbImg = lb.querySelector('.lb-img');
     var lbCap = lb.querySelector('.lb-cap');
@@ -290,6 +290,56 @@
         setTimeout(function () { window.location.href = href; }, 140);
       });
     });
+  }
+
+  /* ---------- 8. accordion photo gallery ----------
+     Hover (or focus, or tap) opens a photo; the others stay as narrow
+     black-and-white strips. Clicking an open photo shows it full size. */
+  var acc = document.getElementById('accordion');
+  if (acc) {
+    var panels = Array.prototype.slice.call(acc.querySelectorAll('.acc-panel'));
+    var current = Math.max(0, panels.findIndex(function (p) { return p.classList.contains('is-active'); }));
+    var canHover = window.matchMedia('(hover: hover) and (pointer: fine)');
+
+    function openPanel(i) {
+      current = i;
+      panels.forEach(function (p, k) {
+        p.classList.toggle('is-active', k === i);
+        p.classList.toggle('is-left', k < i);
+        p.classList.toggle('is-right', k > i);
+        if (k === i) p.setAttribute('aria-current', 'true'); else p.removeAttribute('aria-current');
+      });
+    }
+    openPanel(current);
+
+    panels.forEach(function (p, i) {
+      p.addEventListener('mouseenter', function () { if (canHover.matches) openPanel(i); });
+      p.addEventListener('focus', function () { openPanel(i); });
+      p.addEventListener('keydown', function (e) {
+        var n = panels.length, next = null;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = (i + 1) % n;
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') next = (i - 1 + n) % n;
+        if (next !== null) { e.preventDefault(); panels[next].focus(); }
+      });
+    });
+
+    // first click on a closed photo opens it; only a click on the open one
+    // reaches the full-size viewer (capture phase runs before the viewer)
+    // remember whether the photo was already open when the finger or mouse
+    // went down (tapping also focuses it, which would open it a moment early)
+    var wasOpen = null;
+    acc.addEventListener('pointerdown', function (e) {
+      var p = e.target.closest('.acc-panel');
+      wasOpen = p ? p.classList.contains('is-active') : null;
+    }, true);
+    acc.addEventListener('click', function (e) {
+      var p = e.target.closest('.acc-panel');
+      if (!p) return;
+      var i = panels.indexOf(p);
+      var open = wasOpen === null ? i === current : wasOpen;
+      wasOpen = null;
+      if (!open) { e.preventDefault(); e.stopPropagation(); openPanel(i); }
+    }, true);
   }
 
 })();
