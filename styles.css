@@ -194,9 +194,24 @@ strong { font-weight: 600; }
 .jelly-chip:focus-visible .jelly-face { box-shadow: 0 0 0 3px var(--focus-ring), 0 0 0 1.5px var(--accent); }
 
 .nav-toggle {
-  display: none; background: none; border: 1px solid var(--line);
-  border-radius: 9px; padding: 8px 11px; cursor: pointer; color: var(--ink);
+  display: none; align-items: center; justify-content: center;
+  width: 44px; height: 44px; padding: 0; cursor: pointer;
+  background: none; border: 1px solid var(--line); border-radius: 10px; color: var(--ink);
 }
+.nav-toggle:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 2px; }
+/* three lines that turn into a cross when the menu is open */
+.burger { position: relative; display: block; width: 20px; height: 14px; }
+.burger span {
+  position: absolute; left: 0; width: 100%; height: 2px; border-radius: 2px; background: currentColor;
+  transition: transform .28s cubic-bezier(.22, 1, .36, 1), opacity .2s ease, top .28s cubic-bezier(.22, 1, .36, 1);
+}
+.burger span:nth-child(1) { top: 0; }
+.burger span:nth-child(2) { top: 6px; }
+.burger span:nth-child(3) { top: 12px; }
+.nav-toggle[aria-expanded="true"] .burger span:nth-child(1) { top: 6px; transform: rotate(45deg); }
+.nav-toggle[aria-expanded="true"] .burger span:nth-child(2) { opacity: 0; }
+.nav-toggle[aria-expanded="true"] .burger span:nth-child(3) { top: 6px; transform: rotate(-45deg); }
+@media (prefers-reduced-motion: reduce) { .burger span { transition: none; } }
 
 /* --------------------------------------------------------------------------
    7. Buttons

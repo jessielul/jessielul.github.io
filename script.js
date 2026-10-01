@@ -17,7 +17,7 @@
     toggle.addEventListener('click', function () {
       var open = nav.classList.toggle('open');
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-      toggle.textContent = open ? 'Close' : 'Menu';
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
     });
 
     // close when a link is tapped
@@ -25,7 +25,7 @@
       if (e.target.closest && e.target.closest('a')) {
         nav.classList.remove('open');
         toggle.setAttribute('aria-expanded', 'false');
-        toggle.textContent = 'Menu';
+        toggle.setAttribute('aria-label', 'Open menu');
       }
     });
 
@@ -35,7 +35,7 @@
       if (nav.contains(e.target) || toggle.contains(e.target)) return;
       nav.classList.remove('open');
       toggle.setAttribute('aria-expanded', 'false');
-      toggle.textContent = 'Menu';
+      toggle.setAttribute('aria-label', 'Open menu');
     });
 
     // close when resizing back to desktop
@@ -43,7 +43,7 @@
       if (window.innerWidth > 760 && nav.classList.contains('open')) {
         nav.classList.remove('open');
         toggle.setAttribute('aria-expanded', 'false');
-        toggle.textContent = 'Menu';
+        toggle.setAttribute('aria-label', 'Open menu');
       }
     });
   }
