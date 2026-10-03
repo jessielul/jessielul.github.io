@@ -830,12 +830,83 @@ strong { font-weight: 600; }
 /* --------------------------------------------------------------------------
    26. Print (used to generate the résumé PDF)
    -------------------------------------------------------------------------- */
+/* --------------------------------------------------------------------------
+   Compact résumé page: same layout as the two-page PDF
+   -------------------------------------------------------------------------- */
+@media screen {
+  .cv-head { padding: 54px 0 22px; border-bottom: 0; }
+  .cv-head .wrap-narrow::after { content: ""; display: block; margin-top: 24px; border-bottom: 2px solid var(--accent); }
+  .cv-head .lede { font-size: 17px; }
+  .cv-head .btn-row { margin-top: 22px; }
+  .cv { padding: 0 0 70px; }
+  .cv .eyebrow { display: none; }
+  .cv .mt-48 { margin-top: 0; }
+  .cv .section-title {
+    font-size: 22px !important; color: var(--accent-deep);
+    margin: 34px 0 10px; padding-bottom: 5px; border-bottom: 1px solid var(--line);
+  }
+  .cv p.prose { max-width: none; font-size: 16px !important; }
+  .cv .prose { max-width: none; }
+  .cv .prose li, .cv .xp-item li { font-size: 15.5px; margin-bottom: 4px; }
+  .cv .xp, .cv .skill-rows { margin-top: 0; border-top: 0; }
+  .cv .xp-item { display: block; position: relative; padding: 10px 0 8px; border-bottom: 0; }
+  .cv .xp-when { position: absolute; right: 0; top: 12px; padding: 0; font-variant-numeric: tabular-nums; }
+  .cv .xp-role { font-size: 18px; padding-right: 170px; }
+  .cv .xp-org { font-style: italic; margin-bottom: 5px; }
+  .cv .skill-row { grid-template-columns: 150px minmax(0,1fr); gap: 18px; padding: 6px 0; border-bottom: 0; }
+}
+@media screen and (max-width: 760px) {
+  .cv-head { padding: 40px 0 16px; }
+  .cv .xp-when { position: static; margin: 0 0 2px; }
+  .cv .xp-role { padding-right: 0; }
+  .cv .skill-row { grid-template-columns: 1fr; gap: 2px; padding: 8px 0; }
+}
+
+/* LinkedIn link and print-only helpers */
+.print-only { display: none; }
+.li-icon { flex: none; }
+.btn-li { display: inline-flex; align-items: center; gap: 8px; }
+.footer-li { display: inline-flex; align-items: center; gap: 6px; }
+
+@page { size: A4; margin: 11mm 13mm; }
 @media print {
-  .site-header, .cta-band, .site-footer, .filters, .btn-row, .doors { display: none; }
-  body { font-size: 10.5pt; background: #fff; }
-  .section { padding: 14px 0; }
-  .page-head { padding: 0 0 10px; }
-  .xp-item, .skill-row { padding: 10px 0; }
-  .xp-item ul, .xp-item li { margin-bottom: 3px; }
-  a { color: var(--ink); }
+  .site-header, .cta-band, .site-footer, .filters, .btn-row, .doors, .skip,
+  .eyebrow { display: none !important; }
+  .print-only { display: block !important; }
+  html, body { background: #fff !important; }
+  body { font-size: 9pt !important; line-height: 1.32 !important; color: #1b1e1b; }
+  .wrap, .wrap-narrow { max-width: none !important; padding: 0 !important; }
+  a { color: var(--ink) !important; text-decoration: none !important; }
+
+  /* name block */
+  .page-head { padding: 0 !important; border-bottom: 0 !important; }
+  .cv-head .wrap-narrow { padding-bottom: 6px !important; border-bottom: 1.5px solid var(--accent) !important; }
+  .page-head h1 { font-size: 21pt !important; margin: 0 0 2px !important; line-height: 1.1 !important; }
+  .page-head .lede { font-size: 9.5pt !important; max-width: none !important; margin: 0 !important; }
+  .print-contact { font-size: 9pt !important; color: var(--accent-deep) !important; margin: 3px 0 0 !important; }
+
+  .section, .cv { padding: 0 !important; }
+  .section-title {
+    font-size: 12pt !important; margin: 9px 0 3px !important; padding-bottom: 2px;
+    color: var(--accent-deep); border-bottom: 1px solid var(--line);
+    break-after: avoid; page-break-after: avoid;
+  }
+  .mt-48 { margin-top: 0 !important; }
+  .prose, p.prose { max-width: none !important; font-size: 9pt !important; margin: 0 !important; color: var(--ink-soft) !important; }
+  ul.prose { margin: 0 !important; }
+  .prose li, .xp-item li { font-size: 9pt !important; break-inside: avoid; margin-bottom: 1px !important; padding-left: 11px !important; }
+  .prose li::before, .xp-item li::before { width: 3.5px !important; height: 3.5px !important; left: 1px !important; top: .6em !important; }
+
+  /* experience entries: role and date on one line */
+  .xp, .skill-rows { margin-top: 0 !important; border-top: 0 !important; }
+  .xp-item { display: block !important; position: relative; padding: 3px 0 2px !important; border-bottom: 0 !important; }
+  .xp-role, .xp-org { break-after: avoid; }
+  .xp-when { position: absolute; right: 0; top: 4px; padding: 0 !important; font-size: 8.5pt !important; }
+  .xp-role { font-size: 10pt !important; line-height: 1.25 !important; padding-right: 130px; }
+  .xp-org { font-size: 8.8pt !important; margin-bottom: 1.5px !important; font-style: italic; }
+  .xp-item p { font-size: 9pt !important; }
+
+  .skill-row { grid-template-columns: 100px minmax(0,1fr) !important; gap: 10px !important; padding: 2px 0 !important;
+               border-bottom: 0 !important; break-inside: avoid; }
+  .skill-row dt, .skill-row dd { font-size: 9pt !important; }
 }
