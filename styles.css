@@ -882,7 +882,7 @@ strong { font-weight: 600; }
   .page-head { padding: 0 !important; border-bottom: 0 !important; }
   .cv-head .wrap-narrow { padding-bottom: 6px !important; border-bottom: 1.5px solid var(--accent) !important; }
   .page-head h1 { font-size: 21pt !important; margin: 0 0 2px !important; line-height: 1.1 !important; }
-  .page-head .lede { font-size: 9.5pt !important; max-width: none !important; margin: 0 !important; }
+  .page-head .lede { display: none !important; }
   .print-contact { font-size: 9pt !important; color: var(--accent-deep) !important; margin: 3px 0 0 !important; }
 
   .section, .cv { padding: 0 !important; }
