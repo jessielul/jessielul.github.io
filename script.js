@@ -91,7 +91,7 @@
   /* ---------- 4. contact form -> mailto ---------- */
   var form = document.getElementById('contact-form');
   if (form) {
-    var ADDRESS = 'jackielu0322@outlook.com';
+    var ADDRESS = 'jessielu322@outlook.com';
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
